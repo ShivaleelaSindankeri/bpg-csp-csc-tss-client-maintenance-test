@@ -1,0 +1,41 @@
+*** Settings ***
+Library           ExtendedSelenium2Library
+Library           ExtendedRequestsLibrary
+
+*** Keywords ***
+Input Values In Text Box
+    [Arguments]    ${object_id}    ${input_value}
+    Input Text    ${object_id}    ${input_value}
+
+Select CWT Client Top Unit
+    [Arguments]    ${client_top_unit}
+    Input Values In Text Box    //*[@id="idClientInput"]    ${client_top_unit}
+    Click element    xpath=/html/body/div[4]/div/div[1]
+    Mouse Over    xpath=//*[@id="yui-gen3"]/a
+    Click Link    xpath=//*[@id="yui-gen3"]/a
+    Click Button    xpath=//*[@id="clientStandardButton-button"]
+
+Select From Drop Down List
+    [Arguments]    ${drop_down_list}    ${value_to_select}
+    Run Keyword And Continue On Failure    Wait Until Element Is Visible    ${drop_down_list}    30
+    click element    ${drop_down_list}
+    click element    ${value_to_select}
+
+Set Test Data For CWT User Services ZZ
+    Set Suite Variable    ${employeeId}    U209SXS
+    Set Suite Variable    ${loginId}    shivaAutomTest
+    Set Suite Variable    ${lastName}    Sindankeri
+    Set Suite Variable    ${firstName}    Shivaleela
+    Set Suite Variable    ${middleName}    Shan
+    Set Suite Variable    ${language}    English (United States)
+    Set Suite Variable    ${consultantId}    NA
+    Set Suite Variable    ${country}    China
+    Set Suite Variable    ${User_verification}    ${lastName}, ${firstName} (${loginId})
+    Set Suite Variable    ${logged_User}    ${firstName} ${lastName} (${employeeId})
+    Set Suite Variable    ${role}    CWT User Maintenance
+    Set Suite Variable    ${securityGroups}    AsiaPac Region
+    Set Suite Variable    ${securityGrouptypes}    4
+    Set Suite Variable    ${addRole}    CWT All Clear Maintainer
+    Set Suite Variable    ${modifyRole}    CWT User Maintenance
+    Set Suite Variable    ${deleteRole}    CWT User Maintenance
+    Set Suite Variable    ${modifyLoginId}    shivaAutoModify

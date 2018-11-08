@@ -1,0 +1,545 @@
+*** Settings ***
+Library           ExtendedSelenium2Library
+Library           OperatingSystem
+Resource          Resources/CWT_Maintenance.txt
+Resource          Resources/web_common_keywords.txt
+Library           Collections
+Library           robot.libraries.DateTime
+
+*** Test Cases ***
+All Clear_Sanity_Test
+    [Tags]
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to all clear
+    Then U209SXS is successfully redirected to All Clear Application page
+    And Logout from the application
+    [Teardown]    Close All Browsers
+
+Verify_InitialMail_TestCase01
+    [Tags]
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to all clear
+    Then InputData_For_TestCase01
+    And Logout from the application
+    [Teardown]    Close All Browsers
+
+Verify_InitialMail_TestCase02
+    [Tags]
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to all clear
+    Then InputData_For_TestCase02
+    And Logout from the application
+    [Teardown]    Close All Browsers
+
+Verify_LessThan_8hours_TestCase04
+    [Tags]
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to all clear
+    Then InputData_LessThan_8hours_TestCase04
+    And Logout from the application
+    [Teardown]    Close All Browsers
+
+Verify_CancelBooking_TestCase05
+    [Tags]
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to all clear
+    Then InputData_CancelBooking_TestCase05
+    And Logout from the application
+    [Teardown]    Close All Browsers
+
+Verify_ReservationClearance_TestCase06
+    [Tags]
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to all clear
+    Then InputData_ReservationClearance_TestCase06
+    And Logout from the application
+    [Teardown]    Close All Browsers
+
+Verify_Inactive_TestCase07
+    [Tags]
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to all clear
+    Then InputData_Inactive_TestCase07
+    And Logout from the application
+    [Teardown]    Close All Browsers
+
+*** Keywords ***
+A ${UID} with valid credentials is used
+    Set Test Variable    ${username}    ${UID}
+    Set Test Variable    ${password}    CWT@1234
+
+User credentials are invoked to CWT Maint then user can progress to all clear
+    Launch CWT Maintenance
+    Login to CWT Maintenance
+    Select Account Layer
+    Launch All Clear Application
+
+Launch All Clear Application
+    ExtendedSelenium2Library.Log Title
+    Get Title
+    Get Location
+    Comment    Wait Until Element Is Enabled    Class="yuimenubaritemlabel yuimenubaritemlabel-hassubmenu"    20
+    ${uname_found}=    Run Keyword And Return Status    Element Should Be Visible    id="yui-gen3"
+    Press Key    xpath=//a[contains(@href, '#application_services')]    \\13
+    sleep    1
+    Press Key    xpath=//a[contains(text(), 'All Clear')]    \\13
+    Get Window Titles
+    @{list_wind}    List Windows
+    Log    ${list_wind}
+    Set Test Variable    @{list_wind}
+
+Then ${UID} is successfully redirected to All Clear Application page
+    Verify All Clear Page Was Loaded Successfully
+    Verify Active Items page Loaded Successfully
+    Verify Report page Loaded Successfully
+
+Verify All Clear Page Was Loaded Successfully
+    Verify Title and URL on Create Item Page
+    Verify Logged User on Create Item Page
+    Verify All Links Loaded Properly on Create Item Page
+    Verify All Fields Loaded Properly on Create Item Page
+
+Verify Active Items page Loaded Successfully
+    Verify Title and URL on Active Items Page
+    Verify Logged User on Active Items Page
+    Verify All Links Loaded Properly on Active Items Page
+    Verify All Fields are Loaded Properly on Active Items Page
+
+Verify Report page Loaded Successfully
+    Verify Title and URL on Report Page
+    Verify Logged User on Report Page
+    Verify All Links Loaded Properly on Report Page
+    Verify All Fields are Loaded Properly on Report Page
+
+Verify All Fields Loaded Properly on Create Item Page
+    sleep    2
+    Page Should Contain Element    xpath=//h2[contains(text(), 'EMail Sender')]
+    Page Should Contain Element    xpath=//label[contains(@for, 'FirstName')]
+    Page Should Contain Textfield    id=FirstName
+    Page Should Contain Element    xpath=//label[contains(@for, 'PNRLocator')]
+    Page Should Contain Textfield    id=PNRLocator
+    Page Should Contain Element    xpath=//label[contains(@for, 'MiddleName')]
+    Page Should Contain Textfield    id=MiddleName
+    Page Should Contain Element    xpath=//label[contains(@for, 'OriginCityName')]
+    Page Should Contain Textfield    id=OriginCity
+    Page Should Contain Element    xpath=//label[contains(@for, 'LastName')]
+    Page Should Contain Textfield    id=LastName
+    Page Should Contain Element    xpath=//label[contains(@for, 'DestinationCityName')]
+    Page Should Contain Textfield    id=DestinationCity
+    Page Should Contain Element    xpath=//label[contains(@for, 'EmailAddress')]
+    Page Should Contain Textfield    id=EmailAddress
+    Page Should Contain Element    xpath=//label[contains(@for, 'TravelDate')]
+    Page Should Contain Textfield    id=TravelDate
+    Page Should Contain Element    xpath=//label[contains(@for, 'SourceSystemCode')]
+    Page Should Contain Textfield    id=SourceSystemCode
+    Page Should Contain Element    xpath=//label[contains(@for, 'TravelTime')]
+    Page Should Contain Element    xpath=//label[contains(@for, 'ClientName')]
+    Page Should Contain Textfield    id=ClientName
+    Page Should Contain Element    xpath=//label[contains(@for, 'BookingDate')]
+    Page Should Contain Textfield    id=BookingDate
+    Page Should Contain Element    xpath=//label[contains(@for, 'AccountTypeName')]
+    Page Should Contain Radio Button    xpath=//input[contains(@value, 'Regular')]
+    Page Should Contain Radio Button    xpath=//input[contains(@value, 'NORAM Energy Services')]
+    Page Should Contain Element    xpath=//label[contains(@for, 'ContentExtentName')]
+    Page Should Contain Element    xpath=//input[contains(@value, 'Full')]
+    Page Should Contain Radio Button    xpath=//input[contains(@value, 'Partial')]
+    Page Should Contain Element    xpath=//label[contains(text(), 'Country')]
+    Page Should Contain Element    xpath=//label[contains(text(), 'Vendor')]
+    Page Should Contain Checkbox    id=Air
+    Page Should Contain Element    xpath=//label[contains(@for, 'Air')]
+    Page Should Contain Checkbox    id=Hotel
+    Page Should Contain Element    xpath=//label[contains(@for, 'Hotel')]
+    Page Should Contain Checkbox    id=Car
+    Page Should Contain Element    xpath=//label[contains(@for, 'Car')]
+    Page Should Contain Checkbox    id=Rail
+    Page Should Contain Element    xpath=//label[contains(@for, 'Rail')]
+    Page Should Contain Checkbox    id=Cruise
+    Page Should Contain Element    xpath=//label[contains(@for, 'Cruise')]
+    Page Should Contain Checkbox    id=Visa
+    Page Should Contain Element    xpath=//label[contains(@for, 'Visa')]
+    Page Should Contain Checkbox    id=Limousine
+    Page Should Contain Element    xpath=//label[contains(@for, 'Limousine')]
+    Page Should Contain Checkbox    id=MeetGreet
+    Page Should Contain Element    xpath=//label[contains(@for, 'MeetGreet')]
+    Page Should Contain Checkbox    id=Invoice
+    Page Should Contain Element    xpath=//label[contains(@for, 'Invoice')]
+    Page Should Contain Checkbox    id=Insurance
+    Page Should Contain Element    xpath=//label[contains(@for, 'Insurance')]
+    Page Should Contain Checkbox    id=MISOrOther
+    Page Should Contain Element    xpath=//label[contains(@for, 'MISOrOther')]
+
+Verify Title and URL on Create Item Page
+    Select All clear Window
+    Get Title
+    Comment    Title Should Be    Title=iqaallclear.carlsonwagonlit.com
+    ${location}    Get Location
+    Log    ${location}
+    Location Should Be    https://iqaallclear.carlsonwagonlit.com/EnterTravelerData/Create
+    ExtendedSelenium2Library.Wait Until Page Contains Element    xpath=//input[contains(@value, 'Save')]
+
+Verify Logged User on Create Item Page
+    ${logged_user}    Get Text    xpath=//div[@class="logged-in-user"]/div/i
+    Comment    Log    ${logged_user}
+    Should Be Equal    ${logged_user}    U209SXS
+    Page Should Contain Element    id=toggleHeaderButton
+
+Verify All Links Loaded Properly on Create Item Page
+    Page Should Contain Link    id=lnkHome
+    Page Should Contain Link    id=lnkExit
+    Page Should Contain Image    /Images/documentBankHeader.gif
+    Page Should Contain Button    xpath=//input[contains(@value, 'Save')]
+    Page Should Contain Link    id=lnkCreate
+    Page Should Contain Link    id=lnkActiveItems
+    Page Should Contain Link    id=lnkReport
+    ${copyright}    Get Text    xpath=//div[contains(@class, 'copyright')]
+    Log    ${copyright}
+    Should Be Equal    ${copyright}    Copyright © 2018 CWT
+
+Verify Title and URL on Active Items Page
+    Click Link    id=lnkActiveItems
+    sleep    2
+    Location Should Be    https://iqaallclear.carlsonwagonlit.com/ActiveItems/ActiveItems
+    Get Title
+
+Verify Logged User on Active Items Page
+    ${logged_user}    Get Text    xpath=//div[@class="logged-in-user"]/div/i
+    Comment    Log    ${logged_user}
+    Should Be Equal    ${logged_user}    U209SXS
+    Page Should Contain Element    id=toggleHeaderButton
+
+Verify All Links Loaded Properly on Active Items Page
+    Page Should Contain Link    id=lnkHome
+    Page Should Contain Link    id=lnkExit
+    Page Should Contain Image    /Images/documentBankHeader.gif
+    Page Should Contain Link    id=lnkCreate
+    Page Should Contain Link    id=lnkActiveItems
+    Page Should Contain Link    id=lnkReport
+    ${copyright}    Get Text    xpath=//div[contains(@class, 'copyright')]
+    Log    ${copyright}
+    Should Be Equal    ${copyright}    Copyright © 2018 CWT
+
+Verify All Fields are Loaded Properly on Active Items Page
+    Page Should Contain Element    xpath=//h2[contains(text(), 'Active Items')]
+    Page Should Contain Element    xpath=//h3[contains(text(), 'Search')]
+    Page Should Contain Radio Button    id=EMail
+    Page Should Contain Element    xpath=//label[contains(@for, 'E-Mail_Address')]
+    Page Should Contain Radio Button    id=FirstName
+    Page Should Contain Element    xpath=//label[contains(@for, 'First_Name')]
+    Page Should Contain Radio Button    id=DateOfTravel
+    Page Should Contain Element    xpath=//label[contains(@for, 'Travel_Date')]
+    Page Should Contain Radio Button    id=BridgerID
+    Page Should Contain Element    xpath=//label[contains(@for, 'Bridger_ID')]
+    Page Should Contain Textfield    id=txtSearchValue
+    Page Should Contain Button    id=btnSearch
+    Page Should Contain Button    id=btnClearSearch
+    Page Should Contain Button    id=btnInactive
+    Page Should Contain Button    id=btnRefresh
+    Page Should Contain Button    id=btnCancel
+    Page Should Contain Button    id=btnClear
+    Page Should Contain Button    id=btnExport
+    Page Should Contain Element    xpath=//th[contains(text(), 'Request ID')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'First')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Last')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Booking')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Travel')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'PNR')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Email')]
+
+Verify Title and URL on Report Page
+    Click Link    id=lnkReport
+    sleep    2
+    Location Should Be    https://iqaallclear.carlsonwagonlit.com/Report/Report
+    Get Title
+
+Verify Logged User on Report Page
+    ${logged_user}    Get Text    xpath=//div[@class="logged-in-user"]/div/i
+    Comment    Log    ${logged_user}
+    Should Be Equal    ${logged_user}    U209SXS
+    Page Should Contain Element    id=toggleHeaderButton
+
+Verify All Fields are Loaded Properly on Report Page
+    Page Should Contain Element    xpath=//h2[contains(text(), 'Report')]
+    Page Should Contain Textfield    id=StartDate
+    Page Should Contain Textfield    id=EndDate
+    Page Should Contain Element    xpath=//td[contains(text(), 'End Date')]
+    Page Should Contain Element    xpath=//td[contains(text(), 'Report Type')]
+    Page Should Contain Image    id=StartDateImage
+    Page Should Contain Image    id=EndDateImage
+    Page Should Contain Button    id=btnExport
+    Page Should Contain Button    id=btnSubmit
+    Page Should Contain Element    xpath=//th[contains(text(), 'Request ID')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Country')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'First')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Last')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Booking')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Travel')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'PNR')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Client')]
+    Page Should Contain Element    xpath=//th[contains(text(), 'Email')]
+
+Verify All Links Loaded Properly on Report Page
+    Page Should Contain Link    id=lnkHome
+    Page Should Contain Link    id=lnkExit
+    Page Should Contain Image    /Images/documentBankHeader.gif
+    Page Should Contain Link    id=lnkCreate
+    Page Should Contain Link    id=lnkActiveItems
+    Page Should Contain Link    id=lnkReport
+    ${copyright}    Get Text    xpath=//div[contains(@class, 'copyright')]
+    Log    ${copyright}
+    Should Be Equal    ${copyright}    Copyright © 2018 CWT
+
+Then ${UID} is successfully redirected to All Clear Application
+
+InputData_For_TestCase01
+    Select All clear Window
+    Wait Until Element Is Visible    id=FirstName
+    ExtendedSelenium2Library.Input Text    id=FirstName    Test One
+    Input Values In Text Box    id=MiddleName    Shan
+    Input Values In Text Box    id=LastName    Hiremath
+    Input Values In Text Box    id=EmailAddress    Shivaleela.Sindankeri@carlsonwagonlit.com
+    Input Values In Text Box    id=PNRLocator    TEST01
+    Input Values In Text Box    id=OriginCity    SIN
+    Input Values In Text Box    id=DestinationCity    LAX
+    Create Future Date For Bookings    20
+    Clear Element Text    id=TravelDate
+    Input Values In Text Box    id=TravelDate    ${travel_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Input Values In Text Box    id=SourceSystemCode    222333
+    Click Element    id=TravelTime
+    Mouse Down    xpath=//option[contains(.,'07:00')]
+    Click Element    xpath=//option[contains(.,'07:00')]
+    Input Values In Text Box    id=ClientName    3M
+    Clear Element Text    id=BookingDate
+    ExtendedSelenium2Library.Input Text    id=BookingDate    ${current_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Click Element    xpath=//input[@id='AccountTypeName' and @value='Regular']
+    Click Element    xpath=//input[@id='ContentExtentName' and @value='Partial']
+    Click Element    id=CountryCode
+    Mouse Down    xpath=//option[contains(.,'Singapore')]
+    Click Element    xpath=//option[contains(.,'Singapore')]
+    Select Checkbox    id=Air
+    Click Button    xpath=//input[contains(@value, 'Save')]
+    Record successfully added to database
+
+InputData_For_TestCase02
+    Select All clear Window
+    Wait Until Element Is Visible    id=FirstName
+    ExtendedSelenium2Library.Input Text    id=FirstName    Test Two
+    Input Values In Text Box    id=MiddleName    Shan
+    Input Values In Text Box    id=LastName    Hiremath
+    Input Values In Text Box    id=EmailAddress    Shivaleela.Sindankeri@carlsonwagonlit.com
+    Input Values In Text Box    id=PNRLocator    TEST02
+    Input Values In Text Box    id=OriginCity    DEL
+    Input Values In Text Box    id=DestinationCity    LON
+    Create Future Date For Bookings    21
+    Clear Element Text    id=TravelDate
+    Input Values In Text Box    id=TravelDate    ${travel_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Input Values In Text Box    id=SourceSystemCode    788778
+    Click Element    id=TravelTime
+    Mouse Down    xpath=//option[contains(.,'12:30')]
+    Click Element    xpath=//option[contains(.,'12:30')]
+    Input Values In Text Box    id=ClientName    Exxon
+    Clear Element Text    id=BookingDate
+    ExtendedSelenium2Library.Input Text    id=BookingDate    ${current_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Click Element    xpath=//input[@id='AccountTypeName' and @value='Regular']
+    Click Element    xpath=//input[@id='ContentExtentName' and @value='Full']
+    Click Element    id=CountryCode
+    Mouse Down    xpath=//option[contains(.,'India')]
+    Click Element    xpath=//option[contains(.,'India')]
+    Select Checkbox    id=Air
+    Select Checkbox    id=Hotel
+    Click Button    xpath=//input[contains(@value, 'Save')]
+    Record successfully added to database
+
+InputData_LessThan_8hours_TestCase04
+    Select All clear Window
+    Wait Until Element Is Visible    id=FirstName
+    ExtendedSelenium2Library.Input Text    id=FirstName    Test Four
+    Input Values In Text Box    id=MiddleName    Shan
+    Input Values In Text Box    id=LastName    Hiremath
+    Input Values In Text Box    id=EmailAddress    Shivaleela.Sindankeri@carlsonwagonlit.com
+    Input Values In Text Box    id=PNRLocator    TEST04
+    Input Values In Text Box    id=OriginCity    DEL
+    Input Values In Text Box    id=DestinationCity    LAX
+    Create Future Date For Bookings    2
+    Clear Element Text    id=TravelDate
+    Input Values In Text Box    id=TravelDate    ${travel_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Input Values In Text Box    id=SourceSystemCode    112233
+    Click Element    id=TravelTime
+    Mouse Down    xpath=//option[contains(.,'07:00')]
+    Click Element    xpath=//option[contains(.,'07:00')]
+    Input Values In Text Box    id=ClientName    Exxon
+    Clear Element Text    id=BookingDate
+    ExtendedSelenium2Library.Input Text    id=BookingDate    ${current_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Click Element    xpath=//input[@id='AccountTypeName' and @value='Regular']
+    Click Element    xpath=//input[@id='ContentExtentName' and @value='Partial']
+    Click Element    id=CountryCode
+    Mouse Down    xpath=//option[contains(.,'India')]
+    Click Element    xpath=//option[contains(.,'India')]
+    Select Checkbox    id=Air
+    Select Checkbox    id=Hotel
+    Click Button    xpath=//input[contains(@value, 'Save')]
+    Record successfully added to database
+
+InputData_CancelBooking_TestCase05
+    Select All clear Window
+    Wait Until Element Is Visible    id=FirstName
+    ExtendedSelenium2Library.Input Text    id=FirstName    Test Five
+    Input Values In Text Box    id=MiddleName    Shan
+    Input Values In Text Box    id=LastName    Hiremath
+    Input Values In Text Box    id=EmailAddress    Shivaleela.Sindankeri@carlsonwagonlit.com
+    Input Values In Text Box    id=PNRLocator    TEST05
+    Input Values In Text Box    id=OriginCity    AMS
+    Input Values In Text Box    id=DestinationCity    DEL
+    Create Future Date For Bookings    22
+    Clear Element Text    id=TravelDate
+    Input Values In Text Box    id=TravelDate    ${travel_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Input Values In Text Box    id=SourceSystemCode    223344
+    Click Element    id=TravelTime
+    Mouse Down    xpath=//option[contains(.,'17:30')]
+    Click Element    xpath=//option[contains(.,'17:30')]
+    Input Values In Text Box    id=ClientName    Exxon
+    Clear Element Text    id=BookingDate
+    ExtendedSelenium2Library.Input Text    id=BookingDate    ${current_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Click Element    xpath=//input[@id='AccountTypeName' and @value='Regular']
+    Click Element    xpath=//input[@id='ContentExtentName' and @value='Full']
+    Click Element    id=CountryCode
+    Mouse Down    xpath=//option[contains(.,'India')]
+    Click Element    xpath=//option[contains(.,'India')]
+    Select Checkbox    id=Air
+    Select Checkbox    id=Hotel
+    Click Button    xpath=//input[contains(@value, 'Save')]
+    Record successfully added to database
+    Click Link    id=lnkActiveItems
+    sleep    2
+    Click Element    xpath=//*[@id="DateOfTravel" and @value='DateOfTravel']
+    ExtendedSelenium2Library.Input Text    id=txtSearchValue    ${travel_Date}
+    sleep    2
+    Wait Until Element Is Visible    id=btnSearch
+    Click Button    id=btnSearch
+    sleep    2
+    Wait Until Element Is Visible    id=TravelerClearanceReportModelList_0__CheckBoxValue_CheckBoxSelected
+    Select Checkbox    id=TravelerClearanceReportModelList_0__CheckBoxValue_CheckBoxSelected
+    Wait Until Element Is Visible    id=btnCancel
+    Click Button    id=btnCancel
+    Click Element    xpath=//button/span[contains(text(), 'Yes')]
+
+InputData_ReservationClearance_TestCase06
+    Select All clear Window
+    Wait Until Element Is Visible    id=FirstName
+    ExtendedSelenium2Library.Input Text    id=FirstName    Test Six
+    Input Values In Text Box    id=MiddleName    Shan
+    Input Values In Text Box    id=LastName    Hiremath
+    Input Values In Text Box    id=EmailAddress    Shivaleela.Sindankeri@carlsonwagonlit.com
+    Input Values In Text Box    id=PNRLocator    TEST06
+    Input Values In Text Box    id=OriginCity    SIN
+    Input Values In Text Box    id=DestinationCity    SYD
+    Create Future Date For Bookings    23
+    Clear Element Text    id=TravelDate
+    Input Values In Text Box    id=TravelDate    ${travel_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Click Element    id=TravelTime
+    Mouse Down    xpath=//option[contains(.,'11:00')]
+    Click Element    xpath=//option[contains(.,'11:00')]
+    Input Values In Text Box    id=SourceSystemCode    334455
+    Input Values In Text Box    id=ClientName    Exxon
+    Clear Element Text    id=BookingDate
+    ExtendedSelenium2Library.Input Text    id=BookingDate    ${current_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Click Element    xpath=//input[@id='AccountTypeName' and @value='Regular']
+    Click Element    xpath=//input[@id='ContentExtentName' and @value='Full']
+    Click Element    id=CountryCode
+    Mouse Down    xpath=//option[contains(.,'India')]
+    Click Element    xpath=//option[contains(.,'India')]
+    Select Checkbox    id=Air
+    Select Checkbox    id=Hotel
+    Click Button    xpath=//input[contains(@value, 'Save')]
+    Record successfully added to database
+    Click Link    id=lnkActiveItems
+    sleep    2
+    Click Element    xpath=//*[@id="DateOfTravel" and @value='DateOfTravel']
+    ExtendedSelenium2Library.Input Text    id=txtSearchValue    ${travel_Date}
+    sleep    2
+    Wait Until Element Is Visible    id=btnSearch
+    Click Button    id=btnSearch
+    Wait Until Element Is Visible    id=TravelerClearanceReportModelList_0__CheckBoxValue_CheckBoxSelected
+    Select Checkbox    id=TravelerClearanceReportModelList_0__CheckBoxValue_CheckBoxSelected
+    Wait Until Element Is Visible    id=btnClear
+    Click Button    id=btnClear
+    Click Element    xpath=//button/span[contains(text(), 'Yes')]
+
+InputData_Inactive_TestCase07
+    Select All clear Window
+    Wait Until Element Is Visible    id=FirstName
+    ExtendedSelenium2Library.Input Text    id=FirstName    Test Seven
+    Input Values In Text Box    id=MiddleName    Shan
+    Input Values In Text Box    id=LastName    Hiremath
+    Input Values In Text Box    id=EmailAddress    Shivaleela.Sindankeri@carlsonwagonlit.com
+    Input Values In Text Box    id=PNRLocator    TEST07
+    Input Values In Text Box    id=OriginCity    BOM
+    Input Values In Text Box    id=DestinationCity    SFO
+    Create Future Date For Bookings    24
+    Clear Element Text    id=TravelDate
+    Input Values In Text Box    id=TravelDate    ${travel_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Click Element    id=TravelTime
+    Mouse Down    xpath=//option[contains(.,'18:00')]
+    Click Element    xpath=//option[contains(.,'18:00')]
+    Input Values In Text Box    id=SourceSystemCode    445566
+    Input Values In Text Box    id=ClientName    Exxon
+    Clear Element Text    id=BookingDate
+    ExtendedSelenium2Library.Input Text    id=BookingDate    ${current_Date}
+    Click Button    //button[contains(text(), 'Done')]
+    Click Element    xpath=//input[@id='AccountTypeName' and @value='Regular']
+    Click Element    xpath=//input[@id='ContentExtentName' and @value='Full']
+    Click Element    id=CountryCode
+    Mouse Down    xpath=//option[contains(.,'India')]
+    Click Element    xpath=//option[contains(.,'India')]
+    Select Checkbox    id=Air
+    Select Checkbox    id=Hotel
+    Click Button    xpath=//input[contains(@value, 'Save')]
+    Record successfully added to database
+    Click Link    id=lnkActiveItems
+    sleep    2
+    Click Element    xpath=//*[@id="DateOfTravel" and @value='DateOfTravel']
+    ExtendedSelenium2Library.Input Text    id=txtSearchValue    ${travel_Date}
+    sleep    2
+    Wait Until Element Is Visible    id=btnSearch
+    Click Button    id=btnSearch
+    Wait Until Element Is Visible    id=TravelerClearanceReportModelList_0__CheckBoxValue_CheckBoxSelected
+    Select Checkbox    id=TravelerClearanceReportModelList_0__CheckBoxValue_CheckBoxSelected
+    Wait Until Element Is Visible    id=btnInactive
+    Click Button    id=btnInactive
+    Click Element    xpath=//button/span[contains(text(), 'Yes')]
+
+Create Future Date For Bookings
+    [Arguments]    ${days_ahead}
+    ${current_Date}=    Get Current Date    result_format=%m/%d/%Y
+    ${today}    Get Current Date
+    ${travel_Date}=    Add Time To Date    ${today}    ${days_ahead} days    result_format=%m/%d/%Y
+    Set Test Variable    ${current_Date}
+    Set Test Variable    ${travel_Date}
+
+Record successfully added to database
+    Sleep    1
+    ${success_msg}    Get Text    xpath=//label[contains(text(), ' record successfully added to the database')]
+    Log    ${success_msg}
+    Page Should Contain Element    xpath=//label[contains(text(), ' record successfully added to the database')]
+
+Select All clear Window
+    sleep    1
+    ${handle}=    Select Window    ${list_wind[1]}
+    Maximize Browser Window
+
+Logout from the application
+    Wait Until Element Is Visible    id=lnkExit
+    Click Link    id=lnkExit
+
+Generate Random Mock PNR
+    Set Test Variable    ${pnr}    ${pnr}

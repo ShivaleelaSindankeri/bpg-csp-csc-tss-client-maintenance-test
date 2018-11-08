@@ -1,0 +1,1084 @@
+*** Settings ***
+Suite Setup       Set Test Data For CWT User Services
+Force Tags
+Library           ExtendedSelenium2Library
+Library           OperatingSystem
+Resource          Resources/CWT_Maintenance.txt
+Resource          Resources/web_common_keywords.txt
+Library           AutoItLibrary
+Library           String
+Library           Collections
+
+*** Test Cases ***
+CWT User - Verify RSA Security Authentication Page
+    [Tags]    sanity    regression
+    Given A U209SXS with valid credentials is used
+    Launch CWT Maintenance
+    Login to CWT Maintenance
+    ${multiple_account}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//tr[1]/td[contains(@class, 'loginGrayTextSmall')]
+    ${cwt_service}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//a[contains(@href, '#cwt_services')]
+    Run Keyword If    '${cwt_service}' == 'True'    Launch CWT Services Application
+    ...    ELSE IF    '${multiple_account}' == 'True'    Select Account Layer
+    Then Verify RSA Security Authentication Page
+    [Teardown]    Logout from the application
+
+CWT User - Verify RSA Token with Valid Credentials
+    Given A U209SXS with valid credentials is used
+    Launch CWT Maintenance
+    Login to CWT Maintenance
+    ${multiple_account}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//tr[1]/td[contains(@class, 'loginGrayTextSmall')]
+    ${cwt_service}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//a[contains(@href, '#cwt_services')]
+    Run Keyword If    '${cwt_service}' == 'True'    Launch CWT Services Application
+    ...    ELSE IF    '${multiple_account}' == 'True'    Select Account Layer
+    RSA Input Process
+    RSA ENTER
+    Then successfully redirected to User Filter page
+    [Teardown]    Logout from the application
+
+CWT User - Verify RSA Token with Invalid Credentiials
+    Given A U209SXS with valid credentials is used
+    Launch CWT Maintenance
+    Login to CWT Maintenance
+    ${multiple_account}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//tr[1]/td[contains(@class, 'loginGrayTextSmall')]
+    ${cwt_service}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//a[contains(@href, '#cwt_services')]
+    Run Keyword If    '${cwt_service}' == 'True'    Launch CWT Services Application
+    ...    ELSE IF    '${multiple_account}' == 'True'    Select Account Layer
+    RSA Token with Invalid Credentials
+    RSA ENTER
+    Then An error message is displayed and User prompted to enter an RSA token
+    [Teardown]    Logout from the application
+
+CWT User - Verify CWT Services Sub Menu
+    [Tags]    sanity    regression
+    Given A U209SXS with valid credentials is used
+    Launch CWT Maintenance
+    Login to CWT Maintenance
+    ${multiple_account}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//tr[1]/td[contains(@class, 'loginGrayTextSmall')]
+    ${cwt_service}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//a[contains(@href, '#cwt_services')]
+    Run Keyword If    '${cwt_service}' == 'True'    Verify CWT Maintenance Home Page Launched
+    ...    ELSE IF    '${multiple_account}' == 'True'    Select Account Layer
+    Then Verify CWT Services Sub Menu
+    [Teardown]    Logout from the application
+
+CWT User - Verify User Filter Page
+    [Tags]    sanity    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Verify User Filter Page
+    [Teardown]    Logout from the application
+
+CWT User - Verify Select All / Clear Functionality
+    [Tags]    sanity    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Verify Select All
+    And Clear All
+    [Teardown]    Logout from the application
+
+CWT User - Verify Create User Dailog
+    [Tags]    sanity    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Verify Create User Dailog
+    [Teardown]    Logout from the application
+
+CWT User - Verify Activate/Inactivate Users Pop up
+    [Tags]    sanity    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Emp_ID    ${employeeId}
+    And Verify Activate/Inactivate user pop up
+    [Teardown]    Logout from the application
+
+CWT User - Verify Active User Page
+    [Tags]    sanity    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Verify Active User Page
+    [Teardown]    Logout from the application
+
+CWT User - Verify Inactive User Page
+    [Tags]    sanity    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Verify Inactive User Page
+    [Teardown]    Logout from the application
+
+CWT User - Add New User
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Create New User
+    And Verify Created User
+    [Teardown]    Logout from the application
+
+CWT User - Find User Using Emp_ID
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Emp_ID    ${employeeId}
+    And Verify User
+    [Teardown]    Logout from the application
+
+CWT User - Find User Using Last_Name
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Last_Name    ${lastName}
+    And Verify User
+    [Teardown]    Logout from the application
+
+CWT User - Find User Using Login_Identifier
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Login_Identifier    ${employeeId}
+    And Verify User
+    [Teardown]    Logout from the application
+
+CWT User - Find User Using Roles
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Roles    ${role}
+    And Verify the User
+    [Teardown]    Logout from the application
+
+CWT User - Find User Using Security Groups
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Security Groups    ${securityGroups}
+    And Verify the User
+    [Teardown]    Logout from the application
+
+CWT User - Find User Using Security Group Types
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Security Group types    ${securityGrouptypes}
+    And Verify the User
+    [Teardown]    Logout from the application
+
+CWT User - Add the Roles
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Login_Identifier    ${loginId}
+    And Add Roles For User    ${addRole}
+    Then Verify the Assigned role for user    ${addRole}
+    [Teardown]    Logout from the application
+
+CWT User - Modify the Roles
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Login_Identifier    ${loginId}
+    And Modify Roles For User    ${addRole}    ${modifyRole}
+    Then Verify the Modified role for user    ${modifyRole}
+    [Teardown]    Logout from the application
+
+CWT User - Delete the Roles
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Login_Identifier    ${loginId}
+    And Delete Roles For User    ${deleteRole}
+    Then Verify the Deleted role for user
+    [Teardown]    Logout from the application
+
+CWT User - Inactivate/Active User
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Emp_ID    ${employeeId}
+    And Inactive User by Unchecking checkbox
+    Then Verify Inactive User Info
+    And Active a User
+    Then Verify Active User Info
+    [Teardown]    Logout from the application
+
+CWT User - Inactive/Active User using Pop up
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Emp_ID    ${employeeId}
+    And Inactive User
+    Then Verify Inactive User Info And Activate User
+    Then Verify Active User Info
+    [Teardown]    Logout from the application
+
+CWT User - Modify the User Information
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    And Find User Using Login_Identifier    ${loginId}
+    Then Modify User Info
+    And Verify Modified User Information
+    [Teardown]    Logout from the application
+
+CWT User - Delete User
+    [Tags]    regression
+    Given A U209SXS with valid credentials is used
+    When User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Then Find User Using Login_Identifier    ${modifyLoginId}
+    And Delete User    ${modifyLoginId}
+    [Teardown]    Logout from the application
+
+All Test Cases
+    Given A U209SXS with valid credentials is used
+    Launch CWT Maintenance
+    Login to CWT Maintenance
+    ${multiple_account}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//tr[1]/td[contains(@class, 'loginGrayTextSmall')]
+    ${cwt_service}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//a[contains(@href, '#cwt_services')]
+    Run Keyword If    '${cwt_service}' == 'True'    Launch CWT Services Application
+    ...    ELSE IF    '${multiple_account}' == 'True'    Select Account Layer
+    Then Verify RSA Security Authentication Page
+
+*** Keywords ***
+A ${UID} with valid credentials is used
+    Set Test Variable    ${username}    ${UID}
+    Set Test Variable    ${password}    CWT@1234
+
+Active a User
+    Click Link    xpath=//table/tbody[@class='yui-dt-data']/tr/td[1]/div/a
+    select Checkbox    id=activeFlag
+    Click Button    xpath=//button[contains(text(), 'Submit')]
+
+Add Roles For User
+    [Arguments]    ${add_Role}
+    Click Link    xpath=//table/tbody[@class='yui-dt-data']/tr/td[2]/div/a
+    Comment    Click Button    xpath=//button[contains(text(), 'Edit Roles')]
+    Comment    Wait Until Element Is Visible    id=listBoxAvailableRole
+    Click Element    xpath=//option[contains(.,'${add_Role}')]
+    Click Link    id=addButtonRole
+    sleep    1
+    Click Button    id=yui-gen4-button
+    Comment    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Submit')]
+    Comment    Click Button    xpath=//button[contains(text(), 'Submit')]
+
+Clear All
+    Wait Until Element Is Visible    id=filterEmployeeIdentifier
+    sleep    1
+    Click Element    xpath=/html/body/div[7]/div/form/div[2]/div[2]/div/p/a[2]
+    Checkbox Should Not Be Selected    id=1
+    Checkbox Should Not Be Selected    id=2
+    Checkbox Should Not Be Selected    id=3
+    Checkbox Should Not Be Selected    id=4
+
+Create New User
+    Click Link    xpath=//a[contains(text(), 'Create User')]
+    Wait Until Element Is Visible    id=employeeIdentifier
+    Set Test Data For CWT User Services
+    Input Values In Text Box    id=employeeIdentifier    ${employeeId}
+    Input Values In Text Box    id=loginIdentifier    ${loginId}
+    Input Values In Text Box    id=lastName    ${lastName}
+    Input Values In Text Box    id=firstName    ${firstName}
+    Input Values In Text Box    id=middleName    ${middleName}
+    Select Checkbox    id=activeFlag
+    Page Should Contain Element    xpath=//label[contains(@for, 'language')]
+    Click Element    id=language
+    Comment    Mouse Down    xpath=//option[contains(.,'English (United States)')]
+    Click Element    xpath=//option[contains(.,"${language}")]
+    Comment    @{language_list}    Get List Items    id=language
+    Comment    Select From Drop Down List    ${language_list}    English (United States)
+    Comment    Select From List    id=language    English (United States)
+    Input Values In Text Box    id=consultantCode    ${consultantId}
+    Click Element    id=country
+    Comment    Mouse Down    xpath=//option[contains(.,'India')]
+    Click Element    xpath=//option[contains(.,"${country}")]
+    Comment    @{country_list}    Get List Items    id=country
+    Comment    Comment    Select From Drop Down List    ${country_list}    India
+    Comment    Select From List    ${country_list}    India
+    Click Button    xpath=//button[contains(text(), 'Submit')]
+
+Create User
+    Click Link    xpath=//a[contains(text(), 'Create User')]
+    Wait Until Element Is Visible    id=employeeIdentifier
+    Input Values In Text Box    id=employeeIdentifier    U209SXS
+    Input Values In Text Box    id=loginIdentifier    shiva_India
+    Input Values In Text Box    id=lastName    Sindankeri
+    Input Values In Text Box    id=firstName    shivaleela
+    Input Values In Text Box    id=middleName    shan
+    Select Checkbox    id=activeFlag
+    Page Should Contain Element    xpath=//label[contains(@for, 'language')]
+    Click Element    id=language
+    Comment    Mouse Down    xpath=//option[contains(.,'English (United States)')]
+    Click Element    xpath=//option[contains(.,'English (United States)')]
+    Comment    @{language_list}    Get List Items    id=language
+    Comment    Comment    Select From Drop Down List    ${language_list}    English (United States)
+    Comment    Select From List    id=language    English (United States)
+    Input Values In Text Box    id=consultantCode    Not Assign
+    Click Element    id=country
+    Comment    Mouse Down    xpath=//option[contains(.,'India')]
+    Click Element    xpath=//option[contains(.,'China')]
+    Comment    @{country_list}    Get List Items    id=country
+    Comment    Comment    Select From Drop Down List    ${country_list}    India
+    Comment    Select From List    ${country_list}    India
+    Click Button    xpath=//button[contains(text(), 'Submit')]
+
+Delete Roles For User
+    [Arguments]    ${delete_role}
+    Click Link    xpath=//table/tbody[@class='yui-dt-data']/tr/td[2]/div/a
+    Comment    Click Button    xpath=//button[contains(text(), 'Edit Roles')]
+    Wait Until Element Is Visible    id=listBoxAssignedRole
+    Click Element    xpath=//option[contains(.,'${delete_role}')]
+    Click Link    id=removeButtonRole
+    sleep    1
+    Click Button    id=yui-gen4-button
+    Comment    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Submit')]
+    Comment    Click Button    xpath=//button[contains(text(), 'Submit')]
+
+Delete User
+    [Arguments]    ${modifyLoginId}
+    Wait Until Element Is Visible    id=userActiveLink
+    Click Link    xpath=//tbody[@class='yui-dt-data']//a[contains(text(), '${modifyLoginId}')]
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Delete')]
+    Click Button    xpath=//button[contains(text(), 'Delete')]
+    Scroll Element Into View    xpath=//a[contains(text(), 'Logout')]
+    ${message}    Get Text    xpath=//div[contains(text(), 'No records found.')]
+    Should Be Equal    ${message}    No records found.
+
+Find User Using Emp_ID
+    [Arguments]    ${EmpID}
+    Wait Until Element Is Visible    id=filterEmployeeIdentifier
+    Input Values In Text Box    id=filterEmployeeIdentifier    ${EmpID}
+    Wait Until Element Is Visible    xpath=//a[contains(text(), 'Find')]
+    Click Link    xpath=//a[contains(text(), 'Find')]
+
+Find User Using Last_Name
+    [Arguments]    ${LastName}
+    Wait Until Element Is Visible    id=filterLastName
+    Input Values In Text Box    id=filterLastName    ${LastName}
+    Sleep    1
+    Click Link    xpath=//a[contains(text(), 'Find')]
+
+Find User Using Login_Identifier
+    [Arguments]    ${LoginIdentifier}
+    Scroll Element Into View    xpath=//a[contains(text(), 'Logout')]
+    Wait Until Element Is Visible    filterLoginIdentifier
+    Input Values In Text Box    filterLoginIdentifier    ${LoginIdentifier}
+    sleep    1
+    Click Link    xpath=//a[contains(text(), 'Find')]
+
+Find User Using Roles
+    [Arguments]    ${searchRole}
+    Wait Until Element Is Visible    id=filterLastName
+    Click Element    id=RoleOID
+    Click Element    xpath=//option[contains(.,'${searchRole}')]
+    Wait Until Element Is Visible    xpath=//a[contains(text(), 'Find')]
+    Click Link    xpath=//a[contains(text(), 'Find')]
+
+Find User Using Security Group types
+    [Arguments]    ${SecurityGroupTypes}
+    Wait Until Element Is Visible    id=filterLastName
+    Select Checkbox    id=${SecurityGroupTypes}
+    Wait Until Element Is Visible    xpath=//a[contains(text(), 'Find')]
+    Click Link    xpath=//a[contains(text(), 'Find')]
+
+Find User Using Security Groups
+    [Arguments]    ${searchSecurityGroups}
+    Wait Until Element Is Visible    id=filterLastName
+    Click Element    id=SecurityGroupOID
+    Click Element    xpath=//option[contains(.,'${searchSecurityGroups}')]
+    Wait Until Element Is Visible    xpath=//a[contains(text(), 'Find')]
+    Click Link    xpath=//a[contains(text(), 'Find')]
+
+Inactive User
+    Click Link    id=userActivateButton-button
+    Click Element    xpath=//option[contains(.,'Sindankeri, Shivaleela (shivaAutomTest)')]
+    Click Link    id=inactivateButtonUser
+    Click Element    xpath=//div[@id='userActivateDialog']/div[3]//button[1]
+
+Launch CWT Maintenance Home Page
+
+Launch CWT Services Application
+    Comment    ${uname_found}=    Run Keyword And Return Status    Element Should Be Visible    id="yui-gen4"
+    Press Key    xpath=//a[contains(@href, '#cwt_services')]    \\13
+    Press Key    xpath=//a[contains(text(), 'CWT User')]    \\13
+    Get Window Titles
+    @{list_wind}    List Windows
+    Log    ${list_wind}
+    Set Test Variable    @{list_wind}
+
+Logout from the application
+    Scroll Element Into View    xpath=//a[contains(text(), 'Logout')]
+    Wait Until Element Is Visible    xpath=//a[contains(text(), 'Logout')]
+    Comment    Click Link    xpath=//a[contains(text(), 'Logout')]
+    Comment    Click Element    xpath=/html/body/div[3]/p/a[1]
+    Comment    ExtendedSelenium2Library.Confirm Action
+    sleep    1
+    Choose Ok On Next Confirmation
+    Click Element    //a[contains(.,'Logout')]
+    Confirm Action
+    Comment    Choose Ok On Next Confirmation
+    ${log}=    ExtendedSelenium2Library.Get Alert Message
+    Title Should Be    Thank You!
+    ${msg1}=    Get Text    xpath=//tr[3]/td[2]
+    ${msg2}=    Get Text    xpath=//tr[4]/td[2]
+    ${msg3}=    Get Text    xpath=//tr[5]/td[2]
+    Should Be Equal    ${msg1}    Thank You!
+    Should Be Equal    ${msg2}    Log Off Successful
+    Should Be Equal    ${msg3}    You are now logged off.
+    Comment    Close All Browsers
+
+Modify Roles For User
+    [Arguments]    ${current_role}    ${modify_role}
+    Click Link    xpath=//table/tbody[@class='yui-dt-data']/tr/td[1]/div/a
+    Click Button    xpath=//button[contains(text(), 'Edit Roles')]
+    Wait Until Element Is Visible    id=listBoxAssignedRole
+    Click Element    xpath=//option[contains(.,'${current_role}')]
+    Click Link    id=removeButtonRole
+    sleep    1
+    Wait Until Element Is Visible    id=listBoxAvailableRole
+    Click Element    xpath=//option[contains(.,'${modify_role}')]
+    Click Link    id=addButtonRole
+    Click Button    id=yui-gen4-button
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Submit')]
+    Click Button    xpath=//button[contains(text(), 'Submit')]
+
+Modify User Info
+    Click Link    xpath=//table/tbody[@class='yui-dt-data']/tr/td[1]/div/a
+    Wait Until Element Is Visible    id=employeeIdentifier
+    Set Test Data for Modify User Infomation
+    Clear Element Text    id=employeeIdentifier
+    Input Values In Text Box    id=employeeIdentifier    ${employeeId}
+    Clear Element Text    id=loginIdentifier
+    Input Values In Text Box    id=loginIdentifier    ${modifyLoginId}
+    Clear Element Text    id=lastName
+    Input Values In Text Box    id=lastName    ${lastName}
+    Clear Element Text    id=firstName
+    Input Values In Text Box    id=firstName    ${firstName}
+    Clear Element Text    id=middleName
+    Input Values In Text Box    id=middleName    ${middleName}
+    Select Checkbox    id=activeFlag
+    Comment    Page Should Contain Element    xpath=//label[contains(@for, 'language')]
+    Click Element    id=language
+    Comment    Mouse Down    xpath=//option[contains(.,'English (United States)')]
+    Click Element    xpath=//option[contains(.,'${language}')]
+    Clear Element Text    id=consultantCode
+    Input Values In Text Box    id=consultantCode    ${consultantId}
+    Click Element    id=country
+    Comment    Mouse Down    xpath=//option[contains(.,'India')]
+    Click Element    xpath=//option[contains(.,'${country}')]
+    Click Button    xpath=//button[contains(text(), 'Submit')]
+
+RSA ENTER
+    Win Activate    CWT User - Windows Internet Explorer
+    Comment    Win Activate    CWT User - Google Chrome    Chrome Legacy Window
+    Comment    Send    +{F10}
+    Focus    id=rsaToken
+    ${content}=    Get Binary File    C:\\Users\\U209SXS\\Downloads\\CSC\\val.txt
+    Wait Until Element Is Visible    id=rsaToken
+    Input Values In Text Box    id=rsaToken    ${content}
+    Comment    sleep    1 second
+    Click Link    id=userCenteredButton-button
+
+RSA Input Process
+    Sleep    2
+    ${runtime}=    AutoItLibrary.Run    "C:\\Program Files (x86)\\RSA SecurID Software Token\\SecurID.exe"
+    Log    ${runtime}
+    sleep    1
+    Send    22072207
+    Send    {ENTER}
+    ControlGetFocus    QWidget
+    Sleep    1 second
+    Send    {TAB}
+    sleep    1 second
+    Send    {ENTER}
+    Send    !{F4}
+    AutoItLibrary.Run    Notepad.exe "C:\\Users\\U209SXS\\Downloads\\CSC\\val.txt"
+    ControlGetFocus    val - Notepad
+    sleep    1 second
+    send    ^{a}
+    Comment    sleep    1 second
+    Send    {BS}
+    Comment    sleep    1 second
+    Send    {CTRLDOWN}V{CTRLUP}
+    Comment    sleep    1 second
+    send    ^{s}
+    send    !{F4}
+
+Set Test Data for Modify User Infomation
+    Set Test Variable    ${employeeId}    U209SXS
+    Set Suite Variable    ${modifyLoginId}    shivaAutoModify
+    Set Test Variable    ${lastName}    SindModify
+    Set Test Variable    ${firstName}    ShivaModify
+    Set Test Variable    ${middleName}    ShanModify
+    Set Test Variable    ${language}    English (Canada)
+    Set Test Variable    ${consultantId}    NA
+    Set Test Variable    ${country}    Congo
+    Set Test Variable    ${User_verification}    ${lastName}, ${firstName} (${modifyLoginId})
+
+Then ${UID} is successfully redirected to CWT User page
+    Comment    Verify User Filter Page
+    Comment    Verify Create User Dailog
+    Verify Active User Page
+    Verify Inactive User Page
+
+User credentials are invoked to CWT Maint then user can progress to CWT Service
+    Launch CWT Maintenance
+    Login to CWT Maintenance
+    ${multiple_account}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//tr[1]/td[contains(@class, 'loginGrayTextSmall')]
+    ${cwt_service}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//a[contains(@href, '#cwt_services')]
+    Run Keyword If    '${cwt_service}' == 'True'    Launch CWT Services Application
+    ...    ELSE IF    '${multiple_account}' == 'True'    Select Account Layer
+    Comment    Select Account Layer
+    Comment    Launch CWT Services Application
+    RSA Input Process
+    RSA ENTER
+
+Verify Activate/Inactivate user pop up
+    Verify All Fields Loaded Properly on Edit User Pop up
+    Verify All Labels Content on Edit User Pop up
+
+Verify Active User Info
+    Click Link    id=userActiveLink
+    sleep    1
+    Wait Until Element Is Visible    id=userActiveLink
+    ${User}=    Get Text    xpath=//tbody[@class='yui-dt-data']//a[contains(text(), 'Sindankeri, Shivaleela (shivaAutomTest)')]
+    Should Be Equal    ${User}    Sindankeri, Shivaleela (shivaAutomTest)
+
+Verify Active User Page
+    Wait Until Element Is Visible    id=filterLastName
+    Click Element    id=SecurityGroupOID
+    Click Element    xpath=//option[contains(.,'EMEA Region')]
+    Click Link    xpath=//a[contains(text(), 'Find')]
+    Wait Until Page Contains Element    id=userActivateButton-button
+    Title Should Be    CWT Maintenance - User
+    Verify User Filter Header Information
+    Verify All Fields Loaded Properly on Active User Page
+    Verify All Labels Content on Active User Page
+
+Verify All Fields Loaded Properly on Active User Page
+    Page Should Contain Element    xpath=//div[contains(@class, 'pageTitle')]
+    Page Should Contain Link    id=userActiveLink
+    Page Should Contain Element    xpath=//span[contains(text(), '<< first')]
+    Page Should Contain Element    xpath=//span[contains(text(), '< previous')]
+    Page Should Contain Element    xpath=//a[contains(text(), 'next >')]
+    Page Should Contain Element    xpath=//a[contains(text(), 'last >>')]
+    Page Should Contain Element    id=jtpLabel
+    Page Should Contain Element    id=userlabel
+    Page Should Contain Element    xpath=//a[contains(text(), 'Create User')]
+    Page Should Contain Element    id=userActivateButton-button
+    Page Should Contain Element    xpath=//span/a[contains(text(), 'Users')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Assigned Roles')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Employee Id')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Login Id')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Consultant Id')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Language')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Country')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Inactive Date')]
+
+Verify All Fields Loaded Properly on Create User Dialog
+    Click Link    xpath=//a[contains(text(), 'Create User')]
+    Wait Until Element Is Visible    id=userDialogTitle
+    Page Should Contain Element    id=userDialogTitle
+    Page Should Contain Link    //a[contains(@class, 'container-close')]
+    Page Should Contain Element    id=requiredText
+    Page Should Contain Element    xpath=//label[contains(@for, 'employeeIdentifier')]
+    Page Should Contain Textfield    id=employeeIdentifier
+    Page Should Contain Element    xpath=//label[contains(@for, 'loginIdentifier')]
+    Page Should Contain Textfield    id=loginIdentifier
+    Page Should Contain Element    xpath=//label[contains(@for, 'lastName')]
+    Page Should Contain Textfield    id=lastName
+    Page Should Contain Element    xpath=//label[contains(@for, 'firstName')]
+    Page Should Contain Textfield    id=firstName
+    Page Should Contain Element    xpath=//label[contains(@for, 'middleName')]
+    Page Should Contain Textfield    id=middleName
+    Page Should Contain Element    xpath=//label[contains(@for, 'activeFlag')]
+    Page Should Contain Checkbox    id=activeFlag
+    Page Should Contain Element    xpath=//label[contains(@for, 'language')]
+    Comment    Page Should Contain Textfield    id=language
+    Page Should Contain Element    xpath=//label[contains(@for, 'consultantCode')]
+    Page Should Contain Textfield    id=consultantCode
+    Page Should Contain Element    xpath=//label[contains(@for, 'country')]
+    Comment    Page Should Contain Textfield    id=country
+    Page Should Contain Button    xpath=//button[contains(text(), 'Submit')]
+    Page Should Contain Button    xpath=//button[contains(text(), 'Submit and New')]
+    Page Should Contain Button    xpath=//button[contains(text(), 'Edit Roles')]
+    Page Should Contain Button    xpath=//button[contains(text(), 'Cancel')]
+
+Verify All Fields Loaded Properly on Inactive User Page
+    Page Should Contain Element    xpath=//div[contains(@class, 'pageTitle')]
+    Page Should Contain Link    id=userActiveLink
+    Page Should Contain Element    xpath=//span[contains(text(), '<< first')]
+    Page Should Contain Element    xpath=//span[contains(text(), '< previous')]
+    Page Should Contain Element    xpath=//a[contains(text(), 'next >')]
+    Page Should Contain Element    xpath=//a[contains(text(), 'last >>')]
+    Page Should Contain Element    id=jtpLabel
+    Page Should Contain Element    id=userlabel
+    Page Should Contain Element    xpath=//a[contains(text(), 'Create User')]
+    Page Should Contain Element    id=userActivateButton-button
+    Page Should Contain Element    xpath=//span/a[contains(text(), 'Users')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Assigned Roles')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Employee Id')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Login Id')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Consultant Id')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Language')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Country')]
+    Page Should Contain Element    xpath=//span[contains(text(), 'Inactive Date')]
+
+Verify All Fields Loaded Properly on RSA Security Authentication Page
+    Page Should Contain Element    xpath=//div[contains(@class, 'pageTitle')]
+    Page Should Contain Element    xpath=//div[contains(@class, 'rsaCenterModal')]/div
+    Page Should Contain Element    id=rsaToken
+    Page Should Contain Link    id=userCenteredButton-button
+
+Verify All Fields Loaded Properly on User Filter Page
+    Page Should Contain Element    xpath=//div[contains(@class, 'pageTitle')]
+    Page Should Contain Element    id=userfiltertext
+    Page Should Contain Element    xpath=//label[contains(@for, 'employeeIdentifier')]
+    Page Should Contain Textfield    id=employeeIdentifier
+    Page Should Contain Element    xpath=//label[contains(@for, 'filterLastName')]
+    Page Should Contain Textfield    id=filterLastName
+    Page Should Contain Element    xpath=//label[contains(@for, 'loginIdentifier')]
+    Page Should Contain Textfield    id=loginIdentifier
+    Page Should Contain Element    xpath=//label[contains(@for, 'filterRoleList')]
+    Comment    Page Should Contain Textfield
+    Page Should Contain Element    xpath=//label[contains(@for, 'filterSecurityGroupList')]
+    Comment    Page Should Contain Textfield
+    Page Should Contain Link    xpath=//a[contains(text(), 'Select All')]
+    Page Should Contain Link    xpath=xpath=/html/body/div[7]/div/form/div[2]/div[2]/div/p/a[2]
+    Page Should Contain Checkbox    id=1
+    Page Should Contain Checkbox    id=2
+    Page Should Contain Checkbox    id=3
+    Page Should Contain Checkbox    id=4
+    Page Should Contain Link    xpath=//a[contains(text(), 'Find')]
+    Page Should Contain Link    xpath=//a[contains(text(), 'Create User')]
+
+Verify All Labels Content on Active User Page
+    ${pageTitle}=    Get Text    xpath=//div[contains(@class, 'pageTitle')]
+    Should Be Equal    ${pageTitle}    User
+    ${showuserststus}=    Get Text    id=userActiveLink
+    Should Be Equal    ${showuserststus}    Show inactive users
+    ${first}=    Get Text    xpath=//span[contains(text(), '<< first')]
+    Should Be Equal    ${first}    << first
+    ${previous}=    Get Text    xpath=//span[contains(text(), '< previous')]
+    Should Be Equal    ${previous}    < previous
+    ${next}=    Get Text    xpath=//a[contains(text(), 'next >')]
+    Should Be Equal    ${next}    next >
+    ${last}=    Get Text    xpath=//a[contains(text(), 'last >>')]
+    Should Be Equal    ${last}    last >>
+    ${jumpToPage}=    Get Text    id=jtpLabel
+    Should Be Equal    ${jumpToPage}    jump to page:
+    ${jumptoUser}=    Get Text    id=userlabel
+    Should Be Equal    ${jumptoUser}    jump to:
+    ${createUser}=    Get Text    xpath=//a[contains(text(), 'Create User')]
+    Should Be Equal    ${createUser}    Create User
+    ${userActive}=    Get Text    id=userActivateButton-button
+    Comment    Should Be Equal    ${userActive}    Inactivate"\"Activate Users
+    ${user}=    Get Text    xpath=//span/a[contains(text(), 'Users')]
+    Should Be Equal    ${user}    Users
+    ${assignedRoles}=    Get Text    xpath=//span[contains(text(), 'Assigned Roles')]
+    Should Be Equal    ${assignedRoles}    Assigned Roles
+    ${empid}=    Get Text    xpath=//span[contains(text(), 'Employee Id')]
+    Should Be Equal    ${empid}    Employee Id
+    ${loginID}=    Get Text    xpath=//span[contains(text(), 'Login Id')]
+    Should Be Equal    ${loginID}    Login Id
+    ${consultantId}=    Get Text    xpath=//span[contains(text(), 'Consultant Id')]
+    Should Be Equal    ${consultantId}    Consultant Id
+    ${lang}=    Get Text    xpath=//span[contains(text(), 'Language')]
+    Should Be Equal    ${lang}    Language
+    ${country}=    Get Text    xpath=//span[contains(text(), 'Country')]
+    Should Be Equal    ${country}    Country
+    Scroll Element Into View    xpath=//span[contains(text(), 'Inactive Date')]
+    ${InactiveDate}=    Get Text    xpath=//span[contains(text(), 'Inactive Date')]
+    Should Be Equal    ${InactiveDate}    Inactive Date
+
+Verify All Labels Content on Create User Dialog
+    ${userDialogTitle}=    Get Text    id=userDialogTitle
+    Should Be Equal    ${userDialogTitle}    Create User
+    ${userDialogClose}=    Get Text    //a[contains(@class, 'container-close')]
+    Should Be Equal    ${userDialogClose}    Close
+    ${requredText}=    Get Text    id=requiredText
+    Should Be Equal    ${requredText}    *Required field
+    ${empId}=    Get Text    xpath=//label[contains(@for, 'employeeIdentifier')]
+    Should Be Equal    ${empId}    Employee Id:
+    ${loginId}=    Get Text    xpath=//label[contains(@for, 'loginIdentifier')]
+    Should Be Equal    ${loginId}    Login Id:
+    ${lastName}=    Get Text    xpath=//label[contains(@for, 'lastName')]
+    Should Be Equal    ${lastName}    Last Name:
+    ${firstName}=    Get Text    xpath=//label[contains(@for, 'firstName')]
+    Should Be Equal    ${firstName}    First Name:
+    ${middleName}=    Get Text    xpath=//label[contains(@for, 'middleName')]
+    Should Be Equal    ${middleName}    Middle Name:
+    ${userActive}=    Get Text    xpath=//label[contains(@for, 'activeFlag')]
+    Should Be Equal    ${userActive}    User Active:
+    ${language}=    Get Text    xpath=//label[contains(@for, 'language')]
+    Should Be Equal    ${language}    Language:
+    ${consultantId}=    Get Text    xpath=//label[contains(@for, 'consultantCode')]
+    Should Be Equal    ${consultantId}    Consultant Id:
+    ${country}=    Get Text    xpath=//label[contains(@for, 'country')]
+    Should Be Equal    ${country}    Country:
+    ${submit}=    Get Text    xpath=//button[contains(text(), 'Submit')]
+    Should Be Equal    ${submit}    Submit
+    ${submitAndNew}=    Get Text    xpath=//button[contains(text(), 'Submit and New')]
+    Should Be Equal    ${submitAndNew}    Submit and New
+    ${editRoles}=    Get Text    xpath=//button[contains(text(), 'Edit Roles')]
+    Should Be Equal    ${editRoles}    Edit Roles
+    ${cancel}=    Get Text    xpath=//button[contains(text(), 'Cancel')]
+    Should Be Equal    ${cancel}    Cancel
+    Click Button    xpath=//button[contains(text(), 'Cancel')]
+
+Verify All Labels Content on Inctive User Page
+    ${pageTitle}=    Get Text    xpath=//div[contains(@class, 'pageTitle')]
+    Should Be Equal    ${pageTitle}    User
+    ${showuserststus}=    Get Text    id=userActiveLink
+    Should Be Equal    ${showuserststus}    Show active users
+    ${first}=    Get Text    xpath=//span[contains(text(), '<< first')]
+    Should Be Equal    ${first}    << first
+    ${previous}=    Get Text    xpath=//span[contains(text(), '< previous')]
+    Should Be Equal    ${previous}    < previous
+    ${next}=    Get Text    xpath=//a[contains(text(), 'next >')]
+    Should Be Equal    ${next}    next >
+    ${last}=    Get Text    xpath=//a[contains(text(), 'last >>')]
+    Should Be Equal    ${last}    last >>
+    ${createUser}=    Get Text    xpath=//a[contains(text(), 'Create User')]
+    Should Be Equal    ${createUser}    Create User
+    ${userActive}=    Get Text    id=userActivateButton-button
+    Comment    Should Be Equal    ${userActive}    Inactivate"\"Activate Users
+    ${user}=    Get Text    xpath=//span/a[contains(text(), 'Users')]
+    Should Be Equal    ${user}    Users
+    ${assignedRoles}=    Get Text    xpath=//span[contains(text(), 'Assigned Roles')]
+    Should Be Equal    ${assignedRoles}    Assigned Roles
+    ${empid}=    Get Text    xpath=//span[contains(text(), 'Employee Id')]
+    Should Be Equal    ${empid}    Employee Id
+    ${loginID}=    Get Text    xpath=//span[contains(text(), 'Login Id')]
+    Should Be Equal    ${loginID}    Login Id
+    ${consultantId}=    Get Text    xpath=//span[contains(text(), 'Consultant Id')]
+    Should Be Equal    ${consultantId}    Consultant Id
+    ${lang}=    Get Text    xpath=//span[contains(text(), 'Language')]
+    Should Be Equal    ${lang}    Language
+    ${country}=    Get Text    xpath=//span[contains(text(), 'Country')]
+    Should Be Equal    ${country}    Country
+    Scroll Element Into View    xpath=//span[contains(text(), 'Inactive Date')]
+    ${InactiveDate}=    Get Text    xpath=//span[contains(text(), 'Inactive Date')]
+    Should Be Equal    ${InactiveDate}    Inactive Date
+
+Verify All Labels Content on RSA Security Authentication Page
+    ${pageTitle}=    Get Text    xpath=//div[contains(@class, 'pageTitle')]
+    Should Be Equal    ${pageTitle}    RSA Security Authentication
+    ${rsaText}=    Get Text    xpath=//div[contains(@class, 'rsaCenterModal')]/div
+    Should Be Equal    ${rsaText}    Please enter RSA Token to continue
+    ${rsaButton}=    Get Text    id=userCenteredButton-button
+    Should Be Equal    ${rsaButton}    Authenticate RSA Token
+
+Verify All Labels Content on User Filter Page
+    ${pageTitle}=    Get Text    xpath=//div[contains(@class, 'pageTitle')]
+    Should Be Equal    ${pageTitle}    User Filter
+    ${userFilterText}=    Get Text    id=userfiltertext
+    Should Be Equal    ${userFilterText}    Each of the fields are mutually exclusive. Partial values are allowed and will do a like search, no values entered will return all users.
+    ${empID}=    Get Text    xpath=//label[contains(@for, 'filterEmployeeIdentifier')]
+    Should Be Equal    ${empID}    Employee Id:
+    ${lastName}=    Get Text    xpath=//label[contains(@for, 'filterLastName')]
+    Should Be Equal    ${lastName}    Last Name:
+    ${loginIdentifier}=    Get Text    xpath=//label[contains(@for, 'filterLoginIdentifier')]
+    Should Be Equal    ${loginIdentifier}    Login Identifier:
+    ${role}=    Get Text    xpath=//label[contains(@for, 'filterRoleList')]
+    Should Be Equal    ${role}    Roles:
+    ${securityGroups}=    Get Text    xpath=//label[contains(@for, 'filterSecurityGroupList')]
+    Should Be Equal    ${securityGroups}    Security Groups:
+    ${securityGroupTypes}=    Get Text    xpath=//div[@id='filterGroupTypeList']/p/b
+    Should Be Equal    ${securityGroupTypes}    Security Group types
+    ${val}=    Get Text    xpath=//div[@id='filterGroupTypeList']/p
+    ${selectAll}=    Get Text    xpath=//a[contains(text(), 'Select All')]
+    ${clear}=    Get Text    xpath=xpath=/html/body/div[7]/div/form/div[2]/div[2]/div/p/a[2]
+    Should Be Equal    ${selectAll}    Select All
+    Should Be Equal    ${clear}    Clear
+    ${find}=    Get Text    id=findButton-button
+    Should Be Equal    ${find}    Find
+    ${userCreateButton}=    Get Text    id=userCreateButton-button
+    Should Be Equal    ${userCreateButton}    Create User
+
+Verify CWT Maintenance Home Page Launched
+    Wait Until Element Is Visible    id=clientStandardButton-button
+    Title Should Be    CWT Maintenance - Identify Client
+
+Verify CWT Services Sub Menu
+    sleep    1
+    Press Key    xpath=//a[contains(@href, '#cwt_services')]    \\13
+    @{expected_list}=    Create List    CWT User    Security Groups User    Reporting Tags    Security Groups    GDS Country Line Definition
+    ...    Roles
+    @{dummyList}=    Create List
+    : FOR    ${INDEX}    IN RANGE    1    7
+    \    ${services_list}    Get Text    xpath=//div[@id='cwt_services']/div[1]/ul/li[${INDEX}]/a
+    \    Comment    Page Should Contain Element    xpath=//div[@id='cwt_services']/div[1]/ul/li[${INDEX}]/a
+    \    Append To List    ${dummyList}    ${services_list}
+    \    Log List    ${dummyList}
+    @{actualList}=    Create List    @{dummyList}
+    Lists Should Be Equal    ${expected_list}    ${actualList}
+
+Verify Create User Dailog
+    Verify All Fields Loaded Properly on Create User Dialog
+    Verify All Labels Content on Create User Dialog
+
+Verify Created User
+    Scroll Element Into View    xpath=//a[contains(text(), 'Logout')]
+    Wait Until Element Is Visible    xpath=//a[contains(text(), 'Find')]
+    Input Values In Text Box    id=filterLoginIdentifier    ${loginId}
+    Click Link    xpath=//a[contains(text(), 'Find')]
+    Wait Until Element Is Visible    xpath=//table/tbody[@class='yui-dt-data']/tr/td[1]/div
+    ${User}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[1]/div
+    Should Be Equal    ${User}    ${User_verification}
+    ${roles}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[2]/div
+    ${Emp_ID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[3]/div
+    Should Be Equal    ${Emp_ID}    ${employeeId}
+    ${Login_ID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[4]/div
+    Should Be Equal    ${Login_ID}    ${loginId}
+    ${Consultant_ID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[5]/div
+    Should Be Equal    ${Consultant_ID}    ${consultantId}
+    ${Language}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[6]/div
+    Should Be Equal    ${Language}    ${language}
+    ${Country}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[7]/div
+    Should Be Equal    ${Country}    ${country}
+
+Verify Inactive User Info
+    Click Link    id=userActiveLink
+    sleep    1
+    Wait Until Element Is Visible    id=userActiveLink
+    Verify Inactiver_active User Info
+    Click Link    id=userActivateButton-button
+    ${inactive_User}=    Get Text    xpath=//td[@id='inactive_table_td']//option
+    Should Be Equal    ${inactive_User}    Sindankeri, Shivaleela (shivaAutomTest)
+    ${active_User}=    Get Text    xpath=//td[@id='active_table_td']//option
+    Should Be Equal    ${active_User}    Sindankeri, Shivaleela (U209SXS)
+    Click Element    xpath=//div[@id='userActivateDialog']/a
+    Comment    ${current_Date}=    Get Current Date    result_format=%Y%m%d
+    Comment    ${InactiveData}    Get Text    xpath=//table/tbody[@class='yui-dt-data']/tr/td[8]/div/a
+    Comment    Should Be Equal    ${InactiveData}    ${current_Date}
+
+Verify Inactive User Page
+    Wait Until Element Is Visible    id=filterLastName
+    Click Element    id=SecurityGroupOID
+    Click Element    xpath=//option[contains(.,'EMEA Region')]
+    Click Link    xpath=//a[contains(text(), 'Find')]
+    Wait Until Element Is Visible    id=userActiveLink
+    Click Link    id=userActiveLink
+    Wait Until Element Is Visible    id=userActivateButton-button
+    Verify User Filter Header Information
+    Verify All Fields Loaded Properly on Inactive User Page
+    Verify All Labels Content on Inctive User Page
+
+Verify Modified User Information
+    Scroll Element Into View    xpath=//a[contains(text(), 'Logout')]
+    Press Key    xpath=//a[contains(@href, '#cwt_services')]    \\13
+    Press Key    xpath=//a[contains(text(), 'CWT User')]    \\13
+    sleep    2
+    Set Test Data for Modify User Infomation
+    Input Values In Text Box    id=filterLoginIdentifier    ${modifyLoginId}
+    Sleep    1
+    Click Link    xpath=//a[contains(text(), 'Find')]
+    Wait Until Element Is Visible    //table/tbody[@class='yui-dt-data']/tr/td[3]/div
+    ${User}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[1]/div
+    Should Be Equal    ${User}    ${User_verification}
+    ${Emp_ID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[3]/div
+    Should Be Equal    ${Emp_ID}    ${employeeId}
+    ${LoginID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[4]/div
+    Should Be Equal    ${LoginID}    ${loginId}
+    ${ConsultantID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[5]/div
+    Should Be Equal    ${ConsultantID}    ${consultantId}
+    ${Language}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[6]/div
+    Should Be Equal    ${Language}    ${language}
+    ${Country}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[7]/div
+    Should Be Equal    ${Country}    ${country}
+
+Verify RSA Security Authentication Page
+    Wait Until Element Is Visible    id=userCenteredButton-button
+    Title Should Be    CWT User
+    Verify User Filter Header Information
+    Verify All Fields Loaded Properly on RSA Security Authentication Page
+    Verify All Labels Content on RSA Security Authentication Page
+
+Verify Select All
+    Wait Until Element Is Visible    xpath=//a[contains(text(), 'Select All')]
+    Click Link    xpath=//a[contains(text(), 'Select All')]
+    Checkbox Should Be Selected    id=1
+    Checkbox Should Be Selected    id=2
+    Checkbox Should Be Selected    id=3
+    Checkbox Should Be Selected    id=4
+
+Verify User
+    Wait Until Element Is Visible    id=userActiveLink
+    Wait Until Element Is Visible    xpath=//table/tbody[@class='yui-dt-data']/tr/td[1]/div
+    Set Test Data For CWT User Services
+    ${User}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[1]/div
+    Should Be Equal    ${User}    ${User_verification1}
+    ${Emp_ID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[3]/div
+    Should Be Equal    ${Emp_ID}    ${employeeId}
+    ${LoginID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[4]/div
+    Should Be Equal    ${LoginID}    ${loginId}
+    ${ConsultantID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[5]/div
+    Should Be Equal    ${ConsultantID}    ${consultantId}
+    ${Language}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[6]/div
+    Should Be Equal    ${Language}    ${language}
+    ${Country}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[7]/div
+    Should Be Equal    ${Country}    ${country}
+
+Verify User Filter Header Information
+    Set Test Data For CWT User Services
+    ${loggedUser}=    Get Text    xpath=//span[contains(@class, 'textBold')]
+    Should Be Equal    ${loggedUser}    ${logged_User}
+    Page Should Contain Link    xpath=//a[contains(text(), 'Logout')]
+    Page Should Contain Link    xpath=//a[contains(text(), 'Help')]
+
+Verify User Filter Page
+    Title Should Be    Cwt Maintenance - User Filter
+    Verify User Filter Header Information
+    Verify All Fields Loaded Properly on User Filter Page
+    Verify All Labels Content on User Filter Page
+
+Verify the Assigned role for user
+    [Arguments]    ${role}
+    sleep    1
+    Scroll Element Into View    id=userActiveLink
+    ${Assigned_Role}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[2]/div
+    Should Be Equal    ${Assigned_Role}    ${role}
+    [Teardown]
+
+Verify the Deleted role for user
+    sleep    1
+    Scroll Element Into View    id=userActiveLink
+    ${Assigned_Role}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[2]/div
+    Should Be Equal    ${Assigned_Role}    (null)
+
+Verify the Modified role for user
+    [Arguments]    ${modified_role}
+    sleep    1
+    Scroll Element Into View    id=userActiveLink
+    ${Assigned_Role}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[2]/div
+    Should Be Equal    ${Assigned_Role}    ${modified_role}
+
+Verify the User
+    sleep    5
+    Wait Until Page Contains Element    id=userActiveLink
+    Wait Until Element Is Visible    id=userActivateButton-button
+    Page Should Contain Element    //table/tbody[@class='yui-dt-data']/tr/td[1]/div
+    Page Should Contain Link    //table/tbody[@class='yui-dt-data']/tr/td[1]/div/a
+    Page Should Contain Element    //table/tbody[@class='yui-dt-data']/tr/td[3]/div
+    Page Should Contain Element    //table/tbody[@class='yui-dt-data']/tr/td[4]/div
+    Page Should Contain Element    //table/tbody[@class='yui-dt-data']/tr/td[6]/div
+    Page Should Contain Element    //table/tbody[@class='yui-dt-data']/tr/td[7]/div
+
+Verify All Fields Loaded Properly on Edit User Pop up
+    Wait Until Element Is Visible    id=userActivateButton-button
+    Click Element    id=userActivateButton-button
+    Wait Until Element Is Visible    id=userActivateDialogTitle
+    Page Should Contain Element    id=userActivateDialogTitle
+    Page Should Contain Link    //a[contains(@class, 'container-close')]
+    Page Should Contain Element    xpath=//label[contains(@for, 'inactiveUserList')]
+    Page Should Contain Element    xpath=//label[contains(text(), 'Active Users')]
+    Page Should Contain Link    id=activateButtonUser
+    Page Should Contain Link    id=inactivateButtonUser
+    Page Should Contain Element    xpath=//button[contains(text(), 'Submit')]
+    Page Should Contain Element    xpath=//button[contains(text(), 'Cancel')]
+
+Verify All Labels Content on Edit User Pop up
+    ${title}=    Get Text    id=userActivateDialogTitle
+    Should Be Equal    ${title}    Edit Users for Activate/Inactivate
+    ${close}=    Get Value    xpath=//a[contains(@class, 'container-close')]
+    Comment    Should Be Equal    ${close}    Close
+    ${Inactive}=    Get Text    xpath=//label[contains(@for, 'inactiveUserList')]
+    Should Be Equal    ${Inactive}    Inactive Users
+    ${active}=    Get Text    xpath=//label[contains(text(), 'Active Users')]
+    Should Be Equal    ${active}    Active Users
+    ${activeButton}=    Get Text    id=activateButtonUser
+    Should Be Equal    ${activeButton}    >>>
+    ${inactiveButton}=    Get Text    id=inactivateButtonUser
+    Should Be Equal    ${inactiveButton}    <<<
+    ${submit}=    Get Value    xpath=//button[contains(text(), 'Submit')]
+    Should Be Equal    ${submit}    Submit
+    ${cancel}=    Get Value    xpath=//button[contains(text(), 'Cancel')]
+    Should Be Equal    ${cancel}    Cancel
+    Click Element    xpath=/html/body/div[9]/div[1]/a
+
+Set Test Data For CWT User Services
+    Set Suite Variable    ${employeeId}    U209SXS
+    Set Suite Variable    ${loginId}    shivaAutomTest
+    Set Suite Variable    ${lastName}    Sindankeri
+    Set Suite Variable    ${firstName}    Shivaleela
+    Set Suite Variable    ${middleName}    Shan
+    Set Suite Variable    ${language}    English (United States)
+    Set Suite Variable    ${consultantId}    NA
+    Set Suite Variable    ${country}    China
+    Set Suite Variable    ${User_verification}    ${lastName}, ${firstName} (${loginId})
+    Set Suite Variable    ${User_verification1}    ${lastName}, ${firstName} (${employeeId})
+    Set Suite Variable    ${logged_User}    ${firstName} ${lastName} (${employeeId})
+    Set Suite Variable    ${role}    CWT User Maintenance
+    Set Suite Variable    ${securityGroups}    AsiaPac Region
+    Set Suite Variable    ${securityGrouptypes}    4
+    Set Suite Variable    ${addRole}    CWT All Clear Maintainer
+    Set Suite Variable    ${modifyRole}    CWT User Maintenance
+    Set Suite Variable    ${deleteRole}    CWT User Maintenance
+    Set Suite Variable    ${modifyLoginId}    shivaAutoModify
+
+Verify Inactiver_active User Info
+    Wait Until Element Is Visible    id=userActiveLink
+    Wait Until Element Is Visible    xpath=//table/tbody[@class='yui-dt-data']/tr/td[1]/div
+    Set Test Data For CWT User Services
+    ${User}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[1]/div
+    Should Be Equal    ${User}    ${User_verification}
+    ${Emp_ID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[3]/div
+    Should Be Equal    ${Emp_ID}    ${employeeId}
+    ${LoginID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[4]/div
+    Should Be Equal    ${LoginID}    ${loginId}
+    ${ConsultantID}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[5]/div
+    Should Be Equal    ${ConsultantID}    ${consultantId}
+    ${Language}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[6]/div
+    Should Be Equal    ${Language}    ${language}
+    ${Country}    Get Text    //table/tbody[@class='yui-dt-data']/tr/td[7]/div
+    Should Be Equal    ${Country}    ${country}
+
+Inactive User by Unchecking checkbox
+    Click Link    xpath=//tbody[@class='yui-dt-data']//a[contains(text(), 'Sindankeri, Shivaleela (shivaAutomTest)')]
+    Unselect Checkbox    id=activeFlag
+    Click Button    xpath=//button[contains(text(), 'Submit')]
+
+Verify Inactive User Info And Activate User
+    Click Link    id=userActiveLink
+    sleep    1
+    Wait Until Element Is Visible    id=userActiveLink
+    Verify Inactiver_active User Info
+    Click Link    id=userActivateButton-button
+    ${inactive_User}=    Get Text    xpath=//td[@id='inactive_table_td']//option
+    Should Be Equal    ${inactive_User}    Sindankeri, Shivaleela (shivaAutomTest)
+    ${active_User}=    Get Text    xpath=//td[@id='active_table_td']//option
+    Should Be Equal    ${active_User}    Sindankeri, Shivaleela (U209SXS)
+    Click Element    xpath=//option[contains(.,'Sindankeri, Shivaleela (shivaAutomTest)')]
+    Click Link    id=activateButtonUser
+    Click Element    xpath=//div[@id='userActivateDialog']/div[3]//button[1]
+
+RSA Token with Invalid Credentials
+    Sleep    2
+    ${runtime}=    AutoItLibrary.Run    "C:\\Program Files (x86)\\RSA SecurID Software Token\\SecurID.exe"
+    Log    ${runtime}
+    sleep    1
+    Send    22345219
+    Send    {ENTER}
+    ControlGetFocus    QWidget
+    Sleep    1 second
+    Send    {TAB}
+    sleep    1 second
+    Send    {ENTER}
+    Send    !{F4}
+    AutoItLibrary.Run    Notepad.exe "C:\\Users\\U209SXS\\Downloads\\CSC\\val.txt"
+    ControlGetFocus    val - Notepad
+    sleep    1 second
+    send    ^{a}
+    Comment    sleep    1 second
+    Send    {BS}
+    Comment    sleep    1 second
+    Send    {CTRLDOWN}V{CTRLUP}
+    Comment    sleep    1 second
+    send    ^{s}
+    send    !{F4}
+
+successfully redirected to User Filter page
+    Title Should Be    Cwt Maintenance - User Filter
+    ${pageTitle}=    Get Text    xpath=//div[contains(@class, 'pageTitle')]
+    Should Be Equal    ${pageTitle}    User Filter
+
+An error message is displayed and User prompted to enter an RSA token
+    Page Should Contain Element    xpath=//div[@class='authFailText']
+    Page Should Contain Image    xpath=//div[@class='authFailIcon']/img
+    ${authFailText}=    Get Text    xpath=//div[@class='authFailText']
+    Should Be Equal    ${authFailText.strip()}    Incorrect credential. Please enter the next token code.

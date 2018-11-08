@@ -1,0 +1,92 @@
+*** Settings ***
+Library           ExtendedSelenium2Library
+Library           ExtendedRequestsLibrary
+Library           OperatingSystem
+
+*** Keywords ***
+Launch CWT Maintenance
+    Set Environment Variable    no_proxy    127.0.0.1
+    Set Test Variable    ${Driver_Path}    C:/webdriver/
+    Comment    Run Keyword If    localfile=="Yes"    Set Test Variable    ${Driver_Path}    C:/webdriver/
+    ...    ELSE    Running On Jenkins
+    Comment    Run Keyword If    localfile=="No"    Set Test Variable    ${Driver_Path}    JENKINS LOCATION
+    ...    ELSE    Running On Local
+    Comment    ${dict}    Create Dictionary    executable_path=${Driver_Path}
+    Comment    changed to dev url
+    Open Browser    http://vsnv02aw01048.int.carlsonwagonlit.com:8400/authenticate/maintenancesite    ie
+    Maximize Browser Window
+    Delete All Cookies
+
+Login to CWT Maintenance
+    Run Keyword And Continue On Failure    Wait Until Page Contains Element    UserID    30
+    ${uname_found}=    Run Keyword And Return Status    Element Should Be Visible    UserID
+    ${pword_found}=    Run Keyword And Return Status    Element Should Be Visible    UserIdentifier
+    Comment    Run Keyword If    '${uname_found}' == 'True'    Input Text    UserID    ${username}
+    ...    ELSE    Run Keyword And Continue On Failure    Fail    Username field not found.
+    Comment    Run Keyword If    '${pword_found}' == 'True'    Input Text    UserIdentifier    ${password}
+    ...    ELSE    Run Keyword And Continue On Failure    Fail    Password field not found.
+    Run Keyword If    '${uname_found}' == 'True'    ExtendedSelenium2Library.Input Text    UserID    ${username}
+    ...    ELSE    Run Keyword And Continue On Failure    Fail    Username field not found.
+    Run Keyword If    '${pword_found}' == 'True'    ExtendedSelenium2Library.Input Text    UserIdentifier    ${password}
+    ...    ELSE    Run Keyword And Continue On Failure    Fail    Password field not found.
+    Click Button    xpath=//*[contains(@class, 'button_nonactive')]
+
+Navigate to ${menu} menu
+    Wait Until Page Contains Element    xpath=//*[@id="yui-gen0"]/a
+    Mouse Over    xpath=//*[@id="client_services_label"]
+    Mouse Over    xpath=//*[@id="yui-gen0"]/a
+    Mouse Down On Link    xpath=//*[@id="yui-gen0"]/a
+    Wait Until Page Contains Element    xpath=//*[@id="yui-gen1"]/a
+    Mouse Over    xpath=//*[@id="yui-gen1"]/a
+    Mouse Down On Link    xpath=//*[@id="yui-gen1"]/a
+    Wait Until Page Contains Element    xpath=//*[@id="yui-gen2"]/a
+    Mouse Over    xpath=//*[@id="yui-gen2"]/a
+    Mouse Down On Link    xpath=//*[@id="yui-gen2"]/a
+    Wait Until Page Contains Element    xpath=//*[@id="yui-gen3"]/a
+    Mouse Over    xpath=//*[@id="yui-gen3"]/a
+    Mouse Down On Link    xpath=//*[@id="yui-gen3"]/a
+
+Select ${submenu} submenu
+    Sleep    1
+    Log    ${submenu}
+
+Enter RSA Token
+    Sleep    1
+    Verify RSA Security Authentication fields
+    Input Text    RSA Input Field    RSA Token
+    Click Element    RSA Auth button
+
+Enter Invalid RSA Token
+    Sleep    1
+    Verify RSA Security Authentication fields
+    Input Text    RSA Input Field    RSA Token
+    Click Element    RSA Auth button
+
+Verify RSA Security Authentication fields
+    Sleep    1
+    ${RSA_field}=    Element Should Be Visible    RSA Token field
+    Run Keyword And Continue On Failure    '${RSA_field}' == 'True'    Log    RSA Token input field found.    Else    Fail    RSA Token input field not found.
+    ${RSA_button}=    Element Should Be Visible    RSA Token auth button
+    Run Keyword And Continue On Failure    '${RSA_button}' == 'True'    Log    RSA Token button found.    Else    Fail    RSA Token button not found.
+
+Select Account Layer
+    Wait Until Element Is Visible    xpath=//select[@id='pickUrl']/option[contains(.,'U209SXS')]
+    Click Element    xpath=//select[@id='pickUrl']/option[contains(.,'U209SXS')]
+    Click Button    xpath=//*[@id="okbutton"]
+    Launch CWT Services Application
+
+Input Text
+    [Arguments]    ${obj_id}    ${text}
+    Press Key    ${obj_id}    ${text}
+
+Convert File to Base64
+    [Arguments]    ${emailitinerarytoconvert}
+    ${pdffile} =    Get Binary File    ${emailitinerarytoconvert}
+    Log    ${emailitinerarytoconvert}
+    ${encodedemailitinerary} =    Encode String To Bytes    ${pdffile}    Base64
+    ${encodedemailitinerary}=    Replace String    ${encodedemailitinerary}    \n    ${EMPTY}
+    Set Test Variable    ${encodedemailitinerary}
+
+Launch CWT Services Application
+    Press Key    xpath=//a[contains(@href, '#cwt_services')]    \\13
+    Press Key    xpath=//a[contains(text(), 'CWT User')]    \\13
